@@ -2,7 +2,7 @@
 ---
 
 - «[Figma макет](https://www.figma.com/file/jF5fFFzgGOxQeB4CmKWTiE/Chat_external_link?node-id=0%3A1)»,
-- «[Netlify]()»,
+- «[Netlify](https://634e6eabaf32703ba4e90365--melodious-lokum-7c84c9.netlify.app/)»,
 
 ## Описание
 
