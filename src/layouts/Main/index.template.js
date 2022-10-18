@@ -1,3 +1,3 @@
-import styles from "./index.module.scss";
+import "./index.scss";
 
-export default (children) => `<div class="${styles.Grid}">${children}</div>`;
+export default (children) => `<div class="container-grid">${children}</div>`;

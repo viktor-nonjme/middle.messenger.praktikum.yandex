@@ -1,16 +1,16 @@
-.Grid {
+.container-grid-profile {
     display: grid;
     grid-template-columns: 63px 1fr;
     height: 100vh;
 
-    > a {
+    .container-grid-profile-link {
         display: flex;
         align-items: center;
         justify-content: center;
         background: var(--gray-bg);
-        border-right: 1px solid #EAEAEA;
+        border-right: 1px solid var(--gray-border);
 
-        svg {
+        .container-grid-profile-icon {
             fill: var(--primary-blue);
         }
     }

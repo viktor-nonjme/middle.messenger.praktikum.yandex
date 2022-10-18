@@ -1,11 +1,11 @@
-.Form {
+.form-main {
     margin: auto 0;
     width: 340px;
     box-shadow: var(--box-shadow);
     border-radius: var(--border-radius-12);
     padding: 50px 30px;
 
-    fieldset {
+    .form-main-content {
         border: none;
         display: flex;
         flex-direction: column;
@@ -13,7 +13,7 @@
         height: 100%;
     }
 
-    legend {
+    .form-main-legend {
         font-weight: 500;
         font-size: 20px;
         margin-bottom: 40px;
@@ -24,7 +24,7 @@
         margin-top: auto;
     }
 
-    a {
+    .form-main-link {
         margin-top: 14px;
         font-size: 11px;
         color: var(--primary-blue);

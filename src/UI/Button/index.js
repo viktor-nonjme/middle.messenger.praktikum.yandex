@@ -1,10 +1,8 @@
-import styles from "./index.module.scss";
+import "./index.scss";
 import Templator from "../../utils/Templator";
 
-const Button = (props) => {
-  return `<button class="${styles.Button}" type="${props.type}">${props.title}</button>`;
+export const Button = (props) => {
+  return `<button class="button-primary" type="${props.type}">${props.title}</button>`;
 };
 
 Templator.prototype.Button = Button;
-
-export default Button;

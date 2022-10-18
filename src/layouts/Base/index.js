@@ -1,11 +1,9 @@
-import styles from "./index.module.scss";
+import "./index.scss";
 
-function BaseLayout(children) {
+export function BaseLayout(children) {
   return () => {
     return `
-        <div class="${styles.Container}">${children}</div>
+        <div class="container-base">${children}</div>
     `;
   };
 }
-
-export default BaseLayout;

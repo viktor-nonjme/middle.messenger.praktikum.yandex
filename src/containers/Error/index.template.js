@@ -1,7 +1,7 @@
 export default `
-<div class="{{ classes }}">
-   <p>404</p>
-   <p>Не туда попали</p>
-   <a href="/" title="Вернуться обратно">Назад к чатам</a>
+<div class="error-page">
+   <p class="error-page-code">404</p>
+   <p class="error-page-text">Не туда попали</p>
+   <a class="error-page-link" href="/" title="Вернуться обратно">Назад к чатам</a>
 </div>
 `;

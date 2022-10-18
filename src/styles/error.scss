@@ -1,20 +1,20 @@
-.Error {
+.error-page {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    p:first-child  {
+    .error-page-code  {
         font-size: 40px;
         margin-bottom: 20px;
     }
 
-    p:nth-child(2)  {
+    .error-page-text  {
         font-size: 20px;
         margin-bottom: 70px;
     }
 
-    a {
+    .error-page-link {
         color: var(--primary-blue);
         font-size: 11px;
     }

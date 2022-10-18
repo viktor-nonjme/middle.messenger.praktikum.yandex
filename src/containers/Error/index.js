@@ -1,12 +1,10 @@
-import styles from "../../styles/error.module.scss";
-import BaseLayout from "../../layouts/Base";
+import "../../styles/error.scss";
+import { BaseLayout } from "../../layouts/Base";
 import template from "./index.template";
 import Templator from "../../utils/Templator";
 
 const templator = new Templator(template);
 
-const classes = styles.Error;
-
-const compiled = templator.compile({ classes });
+const compiled = templator.compile();
 
 export default BaseLayout(compiled);

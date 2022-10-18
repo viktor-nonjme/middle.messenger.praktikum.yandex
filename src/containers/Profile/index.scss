@@ -1,4 +1,4 @@
-.Modificator {
+.profile {
     a {
         padding: 10px;
         color: var(--primary-blue);
@@ -11,7 +11,7 @@
         }
     }
 
-    form:nth-child(2) {
+    .form-main {
         box-shadow: none;
         margin: 0 auto;
     }

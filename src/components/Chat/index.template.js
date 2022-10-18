@@ -1,19 +1,19 @@
-import styles from "./index.module.scss";
+import "./index.scss";
 
-export default (props) => {
+export default () => {
   return `
-<div class="${styles.Chat}">
-    <div>
+<div class="chat">
+    <div class="chat-content">
 
-        <header>
+        <header class="chat-header">
 
-            <div></div>
-            <p><strong>Вадим</strong></p>
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="9" height="9" viewBox="0 0 512 512"><title>ionicons-v5-f</title><circle cx="256" cy="256" r="48"/><circle cx="256" cy="416" r="48"/><circle cx="256" cy="96" r="48"/></svg>
+            <div class="chat-header-avatar"></div>
+            <p><strong class="chat-header-user">Вадим</strong></p>
+            <div class="chat-header-menu">
+                <svg class="chat-header-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="9" height="9" viewBox="0 0 512 512"><title>ionicons-v5-f</title><circle cx="256" cy="256" r="48"/><circle cx="256" cy="416" r="48"/><circle cx="256" cy="96" r="48"/></svg>
                 <input type="checkbox" />
 
-                <div>
+                <div class="chat-header-menu-dropdown">
                     <ul>
                         <li>Добавить пользователя</li>
                         <li>Удалить пользователя</li>
@@ -24,12 +24,12 @@ export default (props) => {
 
         </header>
 
-        <div>
+        <div class="chat-messages">
 
-            <p class="${styles.Date}">19 июня</p>
+            <p class="chat-date">19 июня</p>
 
-            <div class="${styles.Message}">
-                <p>
+            <div class="chat-message receive">
+                <p class="chat-message-text">
                     Привет! Смотри, тут всплыл интересный 
                     кусок лунной космической истории — НАСА 
                     в какой-то момент попросила Хассельблад 
@@ -41,23 +41,21 @@ export default (props) => {
                     астронавты с собой забрали только кассеты 
                     с пленкой.
                 </p>
-                <p>11:56</p>
+                <p class="chat-message-date">11:56</p>
             </div>
 
-            <div class="${styles.Message}">
-                <p>Круто!</p>
-                <div>
-                    <p>12:00</p>
-                </div>
+            <div class="chat-message send">
+                <p class="chat-message-text">Круто!</p>
+                <p class="chat-message-date">12:00</p>
             </div>
 
         </div>
 
-        <footer>
+        <footer class="chat-footer">
 
-            <form>
-                <input placeholder="Сообщение"/>
-                <button type="submit" title="Отправить сообщение">
+            <form class="chat-footer-form">
+                <input class="chat-footer-form-input" placeholder="Сообщение" type="text" />
+                <button class="chat-footer-form-button" type="submit" title="Отправить сообщение">
                     <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 512 512"><title>ionicons-v5-a</title><polyline points="268 112 412 256 268 400" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px"/><line x1="392" y1="256" x2="100" y2="256" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px"/></svg>
                 </button>
             </form>
