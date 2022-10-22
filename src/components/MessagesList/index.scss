@@ -1,0 +1,91 @@
+.messages-list {
+    width: 100%;
+    border-right: 1px solid #EAEAEA;
+    overflow-y: scroll;
+
+    .messages-list-content {
+        padding: 20px 10px 0;
+        display: flex;
+        flex-direction: column;
+
+        .messages-list-link {
+            font-size: 12px;
+            color: var(--gray);
+            align-self: flex-end;
+        }
+
+        .messages-list-input {
+            margin-top: 23px;
+            text-align: center;
+            height: 32px;
+            background: var(--gray-bg);
+            border: none;
+            border-radius: var(--border-radius-8);
+            color: var(--gray);
+        }
+
+        .messages-list-items {
+            margin-top: 14px;
+        }
+    }
+}
+
+.messages-list-item {
+    padding: 12px 0;
+    display: flex;
+    border-top: 1px solid var(--gray-border);
+    cursor: pointer;
+
+    .messages-list-item-avatar {
+        width: 47px;
+        height: 47px;
+        background: var(--gray-bg);
+        border-radius: 50%;
+    }
+
+    .messages-list-item-center {
+        display: block;
+        width: 63%;
+        margin-left: 10px;
+
+        p strong {
+            font-size: 13px;
+            color: var(--black);
+        }
+
+        p {
+            color: var(--gray);
+            margin-top: 4px;
+            font-size: 12px;
+        }
+    }
+
+    .messages-list-item-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        justify-self: flex-end;
+        margin-left: 24px;
+
+        .messages-list-item-date {
+            color: var(--gray);
+            font-size: 9px;
+        }
+
+        .messages-list-item-notifications {
+            width: 20px;
+            height: 20px;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+        }
+    }
+
+    &:last-child {
+        border-bottom: 1px solid var(--gray-border);
+    }
+}
