@@ -1,0 +1,157 @@
+.chat {
+    width: 100%;
+    height: 100vh;
+
+    .chat-content {
+        padding: 10px 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-border);
+
+            .chat-header-avatar {
+                width: 32px;
+                height: 32px;
+                background: var(--gray-bg);
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+
+            .chat-header-user {
+                vertical-align: top;
+                font-size: 13px;
+            }
+
+            .chat-header-menu {
+                position: relative;
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 25px;
+                height: 25px;
+                background: var(--gray-bg);
+                border-radius: 50%;
+                cursor: pointer;
+
+                .chat-header-menu-icon {
+                    fill: var(--primary-blue);
+                }
+
+                input[type="checkbox"] {
+                    opacity: 0;
+                    position: absolute;
+                    z-index: 100;
+                    cursor: pointer;
+                }
+
+                .chat-header-menu-dropdown {
+                    display: none;
+                    position: absolute;
+                    padding: 7px 15px;
+                    top: 50px;
+                    right: 0;
+                    background: var(--white);
+                    border-radius: var(--border-radius-12);
+                    box-shadow: var(--box-shadow);
+                    width: 170px;
+
+                    ul {
+                        list-style: none;
+
+                        li {
+                            padding: 12px 0;
+                            font-size: 12px;
+                        }
+                    }
+                }
+
+                input[type="checkbox"]:checked~.chat-header-menu-dropdown {
+                    display: block;
+                }
+            }
+        }
+
+        .chat-messages {
+            height: 100%;
+            overflow-y: scroll;
+            display: block;
+        }
+
+        .chat-footer {
+            margin-top: auto;
+
+            .chat-footer-form {
+                padding-top: 10px;
+                border-top: 1px solid #eaeaea;
+                display: flex;
+                align-items: center;
+
+                .chat-footer-form-input {
+                    padding: 10px 20px;
+                    background: var(--gray-bg);
+                    border-radius: 30px;
+                    color: var(--gray);
+                    width: 90%;
+                    border: none;
+                }
+
+                .chat-footer-form-button {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 50%;
+                    background: var(--primary-blue);
+                    border: none;
+                    margin-left: auto;
+                }
+            }
+        }
+    }
+}
+
+.chat-date {
+    text-align: center;
+    color: var(--gray);
+    font-size: 12px;
+    margin: 40px 0;
+}
+
+.chat-message {
+    padding: 11px;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 30px;
+    min-width: 110px;
+    max-width: 400px;
+
+    &.receive {
+        border-radius: var(--border-radius-12);
+        border-top-left-radius: 0;
+        background: var(--gray-bg);
+    }
+
+    &.send {
+        background: var(--blue-message-bg);
+        border-radius: var(--border-radius-12);
+        border-bottom-right-radius: 0;
+        margin-left: auto;
+        width: 100px;
+
+        .chat-message-date {
+            margin-top: 0;
+            color: var(--primary-blue);
+        }
+    }
+
+    .chat-message-date {
+        text-align: right;
+        color: var(--gray);
+        font-size: 9px;
+        margin-top: 9px;
+    }
+}

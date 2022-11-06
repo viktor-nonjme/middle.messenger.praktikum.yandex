@@ -1,0 +1,16 @@
+.profile {
+  padding-top: 60px;
+
+  .profile-form-avatar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+
+    input[type="file"] {
+      opacity: 0;
+      position: absolute;
+    }
+  }
+}
