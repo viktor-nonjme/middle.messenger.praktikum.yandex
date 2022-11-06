@@ -1,31 +1,30 @@
 .form-input-item {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
 
-    &:last-child {
-        margin-bottom: 0;
-    }
+  &:last-child {
+    margin-bottom: 0;
+  }
 
-    .input {
-        border: none;
-        padding: 7px 0;
-        font-size: 13px;
-        border-bottom: 1px solid var(--primary-blue) ;
-    }
+  .input {
+    border: none;
+    padding: 7px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--primary-blue);
+  }
 
-    .label {
-        margin-bottom: 9px;
-        font-weight: 500;
-        font-size: 9px;
-        color: var(--gray);
-    }
+  .label {
+    margin-bottom: 9px;
+    font-weight: 500;
+    font-size: 9px;
+    color: var(--gray);
+  }
 
-    .error {
-        display: none;
-        font-size: 8px;
-        color: var(--red)
-    }
+  .error {
+    margin-top: 5px;
+    font-size: 8px;
+    color: var(--red);
+  }
 }
-

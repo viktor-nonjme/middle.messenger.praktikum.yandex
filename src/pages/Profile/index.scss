@@ -1,0 +1,36 @@
+.container-grid-profile {
+    display: grid;
+    grid-template-columns: 63px 1fr;
+    height: 100vh;
+
+    .container-grid-profile-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--gray-bg);
+        border-right: 1px solid var(--gray-border);
+
+        .container-grid-profile-icon {
+            fill: var(--primary-blue);
+        }
+    }
+}
+
+.profile {
+    a {
+        padding: 10px;
+        color: var(--primary-blue);
+        display: block;
+        text-align: center;
+        font-size: 13px;
+
+        &:last-child {
+            color: var(--red);
+        }
+    }
+
+    .form-main {
+        box-shadow: none;
+        margin: 0 auto;
+    }
+}
