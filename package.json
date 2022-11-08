@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Messenger",
   "scripts": {
-    "dev": "parcel static/index.html",
+    "dev": "parcel static/index.html --no-cache",
     "build": "rimraf dist && parcel build static/index.html",
     "start": "node server.js",
     "stylelint": "stylelint **/*.scss --fix"
@@ -20,26 +20,25 @@
   },
   "homepage": "https://github.com/viktor-nonjme/middle.messenger.praktikum.yandex#readme",
   "devDependencies": {
-    "@anikin/parcel-transformer-handlebars": "^1.0.9",
+    "@anikin/parcel-transformer-handlebars": "1.0.9",
     "@parcel/transformer-sass": "2.7.0",
-    "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.42.0",
-    "@typescript-eslint/parser": "^5.42.0",
-    "eslint": "^8.26.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0",
+    "@types/uuid": "8.3.4",
+    "@typescript-eslint/eslint-plugin": "5.42.0",
+    "@typescript-eslint/parser": "5.42.0",
+    "eslint": "8.26.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-plugin-import": "2.26.0",
     "parcel": "2.7.0",
     "rimraf": "3.0.2",
     "sass": "1.55.0",
-    "stylelint": "^14.14.0",
-    "stylelint-config-standard-scss": "^6.1.0",
-    "stylelint-scss": "^4.3.0",
-    "typescript": "^4.8.4"
+    "stylelint": "14.14.0",
+    "stylelint-config-standard-scss": "6.1.0",
+    "stylelint-scss": "4.3.0",
+    "typescript": "4.8.4"
   },
   "dependencies": {
     "express": "4.18.2",
-    "handlebars": "^4.7.7",
-    "nanoid": "^4.0.0",
-    "uuid": "^9.0.0"
+    "handlebars": "4.7.7",
+    "nanoid": "4.0.0"
   }
 }

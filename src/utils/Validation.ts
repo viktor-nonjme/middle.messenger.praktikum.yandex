@@ -32,11 +32,9 @@ class Validation {
   }
 
   static loginValidation(value: string) {
-    if (value) {
-      const isValid = Validation.inputValidation(value, Validation.validationRegexs.login);
-      if (!isValid) {
-        return 'Некорректный логин';
-      }
+    const isValid = Validation.inputValidation(value, Validation.validationRegexs.login);
+    if (!isValid) {
+      return 'Некорректный логин';
     }
     return '';
   }
@@ -94,11 +92,10 @@ class Validation {
     let isValid: boolean = true;
     for (const element of elements) {
       // @ts-ignore
-      const { value } = element;
       if (element.nodeName === 'INPUT') {
         // @ts-ignore
         const { error } = Validation.checkElement(element);
-        if (value.length > 0 && error.length > 0) {
+        if (error.length > 0) {
           isValid = false;
         }
       }

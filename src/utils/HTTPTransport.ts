@@ -15,40 +15,34 @@ type Options = {
 
 type OptionsWithoutMethod = Omit<Options, 'method'>;
 
+type HTTPMethod = (url: string, options?: OptionsWithoutMethod) => Promise<XMLHttpRequest>
+
 class HTTPTransport {
-  get(url: string, options: OptionsWithoutMethod = {}): Promise<XMLHttpRequest> {
+  get: HTTPMethod = (url, options = {}) => {
+    if (options.data) {
+      url = `${url}${this.queryStringify(options.data)}`;
+    }
     return this.request(url, { ...options, method: METHOD.GET });
-  }
+  };
 
-  post(url: string, options: Options): Promise<XMLHttpRequest> {
-    return this.request(url, { ...options, method: METHOD.POST });
-  }
+  post: HTTPMethod = (url, options = {}) => this.request(url, { ...options, method: METHOD.POST });
 
-  put(url: string, options: Options): Promise<XMLHttpRequest> {
-    return this.request(url, { ...options, method: METHOD.PUT });
-  }
+  put: HTTPMethod = (url, options = {}) => this.request(url, { ...options, method: METHOD.PUT });
 
-  delete(url: string, options: Options): Promise<XMLHttpRequest> {
-    return this.request(url, { ...options, method: METHOD.DELETE });
-  }
+  delete: HTTPMethod = (url, options = {}) => this.request(url, { ...options, method: METHOD.DELETE });
 
   private queryStringify(data: Record<string, any>) {
     const keys = Object.keys(data);
     return keys.reduce((result, key, index) => `${result}${key}=${data[key]}${index < keys.length - 1 ? '&' : ''}`, '?');
   }
 
-  request(url: string, options: Options = { method: METHOD.GET }): Promise<XMLHttpRequest> {
+  private request(url: string, options: Options = { method: METHOD.GET }): Promise<XMLHttpRequest> {
     const { headers = {}, method, data } = options;
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
-      xhr.open(
-        method,
-        method === METHOD.GET && data
-          ? `${url}${this.queryStringify(data)}`
-          : url,
-      );
+      xhr.open(method, url);
 
       Object.keys(headers).forEach((key) => {
         xhr.setRequestHeader(key, headers[key]);

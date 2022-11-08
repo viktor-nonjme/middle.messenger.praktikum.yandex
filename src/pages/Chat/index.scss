@@ -97,20 +97,31 @@
                 padding-top: 10px;
                 border-top: 1px solid #eaeaea;
                 display: flex;
-                align-items: center;
 
-                .chat-footer-form-input {
-                    padding: 10px 20px;
-                    background: var(--gray-bg);
-                    border-radius: 30px;
-                    color: var(--gray);
+                .chat-footer-form-field {
+                    display: block;
                     width: 90%;
-                    border: none;
+
+                    .chat-footer-form-input {
+                        padding: 10px 20px;
+                        background: var(--gray-bg);
+                        border-radius: 30px;
+                        color: var(--gray);
+                        width: 100%;
+                        border: none;
+                        height: 30px;
+                    }
+
+                    span {
+                        margin-top: 5px;
+                        font-size: 8px;
+                        color: var(--red);
+                    }
                 }
 
                 .chat-footer-form-button {
-                    width: 28px;
-                    height: 28px;
+                    width: 30px;
+                    height: 30px;
                     border-radius: 50%;
                     background: var(--primary-blue);
                     border: none;
@@ -119,11 +130,4 @@
             }
         }
     }
-}
-
-.chat-date {
-    text-align: center;
-    color: var(--gray);
-    font-size: 12px;
-    margin: 40px 0;
 }

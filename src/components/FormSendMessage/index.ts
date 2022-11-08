@@ -1,30 +1,32 @@
 import template from './index.template';
 import Block from '../../utils/Block';
 import Validation from '../../utils/Validation';
+import { events } from '../../utils/events';
+
+type FormSendProps = { [key: string]: string };
 
 export default class FormSendMessage extends Block {
-  constructor() {
+  constructor(props: FormSendProps) {
     const state = {};
     super({
-      value: '',
-      error: '',
+      ...props,
       events: {
-        input: (event: Event) => {
-          const element = event.target as HTMLInputElement;
-          const elementName = element.name;
-          const { value } = element;
-          Object.assign(state, { [elementName]: value });
-          console.log('formInputs', state);
-        },
+        input: (event: Event) => events.input(event, state),
         submit: (event: Event) => {
           event.preventDefault();
-          // @ts-ignore
-          const form: any = event.target;
+          const form = event.target as HTMLFormElement;
           const formIsValid = Validation.onSubmitValidation(form);
           console.log('formIsValid', formIsValid);
+          self.setProps({
+            value: '',
+            error: '',
+          });
         },
+        focus: events.focus,
+        blur: (event: Event) => events.blur(self, event),
       },
     });
+    const self = this;
   }
 
   render() {
