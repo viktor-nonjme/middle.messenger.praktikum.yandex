@@ -4,7 +4,7 @@ import Input from '../../UI/Input';
 import Button from '../../UI/Button';
 import Block from '../../utils/Block';
 import template from './index.template';
-import Validation from '../../utils/Validation';
+import { events } from '../../utils/events';
 
 export default class RegistrationPage extends Block {
   constructor() {
@@ -52,22 +52,11 @@ export default class RegistrationPage extends Block {
       passwordRepeat,
       button,
       events: {
-        input: (event: Event) => {
-          const element = event.target as HTMLInputElement;
-          const elementName = element.name;
-          const { value } = element;
-          Object.assign(state, { [elementName]: value });
-          console.log('formInputs', state);
-        },
-        submit: (event: Event) => {
-          event.preventDefault();
-          // @ts-ignore
-          const form: any = event.target;
-          const formIsValid = Validation.onSubmitValidation(form);
-          console.log('formIsValid', formIsValid);
-        },
+        input: (event: Event) => events.input(event, state),
+        submit: (event: Event) => events.submit(self, event),
       },
     });
+    const self = this;
   }
 
   render() {

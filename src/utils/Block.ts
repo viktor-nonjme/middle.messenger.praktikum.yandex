@@ -2,6 +2,8 @@ import Handlebars from 'handlebars';
 import { nanoid } from 'nanoid';
 import EventBus from './EventBus';
 
+type Props = Record<string, any>;
+
 export default class Block {
   static EVENTS = {
     INIT: 'init',
@@ -14,22 +16,22 @@ export default class Block {
 
   protected _element: HTMLElement | null = null;
 
-  protected readonly props: Record<string, any>;
+  protected readonly props: Props;
 
-  protected children: { [id: string]: Block } = {};
+  children: Props;
 
   eventBus: () => EventBus;
 
   protected refs: { [key: string]: HTMLElement } = {};
 
-  public constructor(propsAndChildren?: Record<string, any>) {
-    propsAndChildren = propsAndChildren ?? {} as Record<string, any>;
+  public constructor(propsAndChildren?: Props) {
+    propsAndChildren = propsAndChildren ?? {} as Props;
     const { children, props } = this._getChildren(propsAndChildren);
     this.children = children;
     const eventBus = new EventBus();
     this.props = props;
 
-    this.props = this._makePropsProxy(props || {} as Record<string, any>);
+    this.props = this._makePropsProxy(props || {} as Props);
 
     this.children = this._makePropsProxy(this.children);
 
@@ -40,11 +42,11 @@ export default class Block {
     eventBus.emit(Block.EVENTS.INIT, this.props);
   }
 
-  _getChildren(propsAndChildren?: Record<string, any>) {
-    const children: Record<string, any> = {};
-    const props: Record<string, any> = {};
+  _getChildren(propsAndChildren?: Props) {
+    const children: any = {};
+    const props: any = {};
 
-    Object.entries(propsAndChildren as Record<string, any>).forEach(([key, value]) => {
+    Object.entries(propsAndChildren as Props).forEach(([key, value]) => {
       if (value instanceof Block) {
         children[key] = value;
       } else {
@@ -71,7 +73,7 @@ export default class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER, this.props);
   }
 
-  _componentDidMount(props: Record<string, any>) {
+  _componentDidMount(props: Props) {
     this.componentDidMount(props);
   }
 
@@ -81,10 +83,10 @@ export default class Block {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   // eslint-disable-next-line no-unused-vars
-  componentDidMount(_props: Record<string, any>) {
+  componentDidMount(_props: Props) {
   }
 
-  _componentDidUpdate(oldProps: Record<string, any>, newProps: Record<string, any>) {
+  _componentDidUpdate(oldProps: Props, newProps: Props) {
     const response = this.componentDidUpdate(oldProps, newProps);
     if (!response) {
       return;
@@ -93,11 +95,11 @@ export default class Block {
   }
 
   // eslint-disable-next-line no-unused-vars
-  componentDidUpdate(_oldProps: Record<string, any>, _newProps: Record<string, any>) {
+  componentDidUpdate(_oldProps: Props, _newProps: Props) {
     return true;
   }
 
-  protected setProps = (nextProps: Record<string, any>) => {
+  setProps = (nextProps: Props) => {
     if (!nextProps) {
       return;
     }
@@ -112,7 +114,7 @@ export default class Block {
   _render() {
     const fragment: any = this.render();
     this._removeEvents();
-    const newElement = fragment.firstElementChild!;
+    const newElement = fragment.firstElementChild;
     this._element!.replaceWith(newElement);
     this._element = newElement as HTMLElement;
     this._addEvents();
@@ -132,11 +134,11 @@ export default class Block {
     return this.element!;
   }
 
-  _makePropsProxy(props: Record<string, any>): any {
+  _makePropsProxy(props: Props): any {
     const self = this;
 
     return new Proxy(props, {
-      get(target: Record<string, unknown>, prop: string) {
+      get(target: Props, prop: string) {
         const value = target[prop];
         return typeof value === 'function' ? value.bind(target) : value;
       },
@@ -148,7 +150,7 @@ export default class Block {
       deleteProperty() {
         throw new Error('Нет доступа');
       },
-    }) as unknown as Record<string, any>;
+    }) as unknown as Props;
   }
 
   _createDocumentElement(tagName: string) {
@@ -156,7 +158,7 @@ export default class Block {
   }
 
   _removeEvents() {
-    const { events } = this.props as any;
+    const { events } = this.props as Props;
 
     if (!events || !this._element) {
       return;
@@ -170,7 +172,7 @@ export default class Block {
   }
 
   _addEvents() {
-    const { events } = this.props as Record<string, any>;
+    const { events } = this.props as Props;
 
     if (!events) {
       return;
@@ -184,7 +186,7 @@ export default class Block {
   }
 
   compile(tmpl: string): DocumentFragment {
-    const propsAndStubs: Record<string, any> = { ...this.props };
+    const propsAndStubs: any = { ...this.props };
     Object.entries(this.children).forEach(([key, child]) => {
       propsAndStubs[key] = `<div data-id="${child.id}"></div>`;
     });

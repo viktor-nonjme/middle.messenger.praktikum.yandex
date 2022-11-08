@@ -1,7 +1,7 @@
+import './index.scss';
 import Block from '../../utils/Block';
 import EmptyChat from '../../components/EmptyChat';
 import Chat from '../../components/Chat';
-import './index.scss';
 import { MessagesList } from '../../components/MessagesList';
 import { messages, chatMessages } from '../../data';
 import template from './index.template';
