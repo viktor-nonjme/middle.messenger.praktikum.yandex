@@ -7,16 +7,6 @@
 
 Практическая работа курса "Мидл фронтенд разработчик" от Яндекс Практики
 
-## Страницы
-
-- http://localhost:3000/ - Мессенджер
-- http://localhost:3000/profile - Профиль
-- http://localhost:3000/profile/password - Смена пароля
-- http://localhost:3000/login - Вход
-- http://localhost:3000/registration - Регистрация
-- http://localhost:3000/server-error - 500
-- http://localhost:3000/any - 404
-
 ## Установка
 
 - `npm install` — установка стабильной версии,
