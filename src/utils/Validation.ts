@@ -1,12 +1,16 @@
 class Validation {
   static validationRegexs = {
-    login: /^(?!\d+$)[A-Za-z-_0-9]{3,20}$/,
-    password: /\w{8,40}/,
+    login: /^(?!\d+$)[A-Za-z-_0-9]{2,20}$/,
+    password: /\w{8,30}/,
     phone: /^((8|\+7)[- ]?)?(\(?\d{3}\)?[- ]?)?[\d\- ]{7,10}$/,
     email: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-    name: /^[A-ZА-ЯЁ][а-яА-ЯёЁa-zA-Z-]+$/,
+    name: /^[а-яёА-ЯЁa-zA-Z\s]{2,30}$/,
     message: /.+/,
   };
+
+  static password: string = '';
+
+  static newPassword: string = '';
 
   static formValidators: Record<string, Function> = {
     login: (value: string) => Validation.loginValidation(value),
@@ -19,8 +23,9 @@ class Validation {
     message: (value: string) => Validation.messageValidation(value),
     first_name: (value: string) => Validation.nameValidation(value),
     second_name: (value: string) => Validation.nameValidation(value),
-    password_repeat: (value: string) => Validation.passwordValidation(value),
-    newPasswordRepeat: (value: string) => Validation.passwordValidation(value),
+    password_repeat: (value: string, original: string) => Validation.passwordRepeatValidation(value, original),
+    newPasswordRepeat: (value: string, original: string) => Validation.newPasswordRepeatValidation(value, original),
+    chat_name: (value: string) => Validation.nameValidation(value),
   };
 
   static inputValidation(value: string | number, reg: RegExp) {
@@ -63,6 +68,23 @@ class Validation {
     return '';
   }
 
+  static passwordRepeatValidation(value: string, original: string) {
+    const isValid = value === original;
+    if (!isValid) {
+      return 'Пароли не совпадают';
+    }
+    return '';
+  }
+
+  static newPasswordRepeatValidation(value: string, original: string) {
+    const isValid = value === original;
+    console.log('isValid', isValid, value, original);
+    if (!isValid) {
+      return 'Пароли не совпадают';
+    }
+    return '';
+  }
+
   static messageValidation(value: string) {
     const isValid = Validation.inputValidation(value, Validation.validationRegexs.message);
     if (!isValid) {
@@ -79,8 +101,35 @@ class Validation {
     return '';
   }
 
+  static getPassword(value: string) {
+    Validation.password = value;
+  }
+
   static checkElement(element: HTMLInputElement): { [key: string]: string } {
     const { name, value } = element;
+
+    if (name === 'password') {
+      this.getPassword(value);
+    }
+
+    if (name === 'newPassword') {
+      this.getPassword(value);
+    }
+
+    if (name === 'newPasswordRepeat') {
+      const error = Validation.formValidators[name](value, this.password);
+      return {
+        value, error,
+      };
+    }
+
+    if (name === 'password_repeat') {
+      const error = Validation.formValidators[name](value, this.password);
+      return {
+        value, error,
+      };
+    }
+
     const error = Validation.formValidators[name](value);
     return {
       value, error,
@@ -91,10 +140,9 @@ class Validation {
     const [...elements] = form;
     let isValid: boolean = true;
     for (const element of elements) {
-      // @ts-ignore
+      element as HTMLInputElement;
       if (element.nodeName === 'INPUT') {
-        // @ts-ignore
-        const { error } = Validation.checkElement(element);
+        const { error } = Validation.checkElement(element as HTMLInputElement);
         if (error.length > 0) {
           isValid = false;
         }

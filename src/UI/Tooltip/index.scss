@@ -1,0 +1,34 @@
+.tooltip {
+  position: fixed;
+  width: 200px;
+  padding: 16px;
+  font-size: 12px;
+  top: 30%;
+  right: 30px;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius-8);
+  text-align: center;
+  visibility: hidden;
+  transition: all 0.3s ease-in;
+  z-index: 10;
+}
+
+.success {
+  top: 30px;
+  background: #7cbd3a;
+  color: #244700;
+  visibility: visible;
+}
+
+.warning {
+  top: 30px;
+  background: #e02a5a;
+  color: #5e0912;
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
+  top: 30%;
+  transition: all 0.3s ease-in;
+}
