@@ -1,0 +1,26 @@
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .profile-form-avatar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 60px;
+
+    img {
+        width: 164px;
+        height: 164px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    input[type="file"] {
+      opacity: 0;
+      position: absolute;
+    }
+  }
+}

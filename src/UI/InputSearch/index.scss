@@ -1,0 +1,28 @@
+.messages-list-input {
+  margin-top: 23px;
+  text-align: center;
+  height: 42px;
+  display: flex;
+  justify-content: space-between;
+
+  .messages-list-input-search {
+    background: var(--gray-bg);
+    border: none;
+    border-radius: var(--border-radius-8);
+    color: var(--gray);
+    width: 82%;
+    padding: 6px 13px;
+  }
+
+  .messages-list-input-button {
+    background: var(--gray);
+    border: none;
+    width: 42px;
+    border-radius: var(--border-radius-8);
+    cursor: pointer;
+
+    svg {
+        fill: var(--white);
+    }
+  }
+}
