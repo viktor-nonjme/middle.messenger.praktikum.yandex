@@ -1,8 +1,9 @@
 import Handlebars from 'handlebars';
 import { nanoid } from 'nanoid';
+
 import EventBus from './EventBus';
 
-type Props = Record<string, any>;
+import { TProps } from '../types';
 
 export default class Block {
   static EVENTS = {
@@ -16,22 +17,24 @@ export default class Block {
 
   protected _element: HTMLElement | null = null;
 
-  protected readonly props: Props;
+  public readonly props: TProps;
 
-  children: Props;
+  children: TProps;
 
   eventBus: () => EventBus;
 
-  protected refs: { [key: string]: HTMLElement } = {};
+  public constructor(propsAndChildren?: TProps) {
+    propsAndChildren = propsAndChildren ?? {} as TProps;
 
-  public constructor(propsAndChildren?: Props) {
-    propsAndChildren = propsAndChildren ?? {} as Props;
     const { children, props } = this._getChildren(propsAndChildren);
+
     this.children = children;
+
     const eventBus = new EventBus();
+
     this.props = props;
 
-    this.props = this._makePropsProxy(props || {} as Props);
+    this.props = this._makePropsProxy(props || {} as TProps);
 
     this.children = this._makePropsProxy(this.children);
 
@@ -42,11 +45,11 @@ export default class Block {
     eventBus.emit(Block.EVENTS.INIT, this.props);
   }
 
-  _getChildren(propsAndChildren?: Props) {
+  _getChildren(propsAndChildren?: TProps) {
     const children: any = {};
     const props: any = {};
 
-    Object.entries(propsAndChildren as Props).forEach(([key, value]) => {
+    Object.entries(propsAndChildren as TProps).forEach(([key, value]) => {
       if (value instanceof Block) {
         children[key] = value;
       } else {
@@ -73,7 +76,7 @@ export default class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER, this.props);
   }
 
-  _componentDidMount(props: Props) {
+  _componentDidMount(props: TProps) {
     this.componentDidMount(props);
   }
 
@@ -81,12 +84,9 @@ export default class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  // eslint-disable-next-line no-unused-vars
-  componentDidMount(_props: Props) {
-  }
+  componentDidMount(props: TProps) {}
 
-  _componentDidUpdate(oldProps: Props, newProps: Props) {
+  _componentDidUpdate(oldProps: TProps, newProps: TProps) {
     const response = this.componentDidUpdate(oldProps, newProps);
     if (!response) {
       return;
@@ -94,12 +94,11 @@ export default class Block {
     this._render();
   }
 
-  // eslint-disable-next-line no-unused-vars
-  componentDidUpdate(_oldProps: Props, _newProps: Props) {
+  componentDidUpdate(oldProps: TProps, newProps: TProps) {
     return true;
   }
 
-  setProps = (nextProps: Props) => {
+  setProps = (nextProps: TProps) => {
     if (!nextProps) {
       return;
     }
@@ -134,11 +133,11 @@ export default class Block {
     return this.element!;
   }
 
-  _makePropsProxy(props: Props): any {
+  _makePropsProxy(props: TProps): any {
     const self = this;
 
     return new Proxy(props, {
-      get(target: Props, prop: string) {
+      get(target: TProps, prop: string) {
         const value = target[prop];
         return typeof value === 'function' ? value.bind(target) : value;
       },
@@ -150,7 +149,7 @@ export default class Block {
       deleteProperty() {
         throw new Error('Нет доступа');
       },
-    }) as unknown as Props;
+    }) as unknown as TProps;
   }
 
   _createDocumentElement(tagName: string) {
@@ -158,7 +157,7 @@ export default class Block {
   }
 
   _removeEvents() {
-    const { events } = this.props as Props;
+    const { events } = this.props as TProps;
 
     if (!events || !this._element) {
       return;
@@ -172,7 +171,7 @@ export default class Block {
   }
 
   _addEvents() {
-    const { events } = this.props as Props;
+    const { events } = this.props as TProps;
 
     if (!events) {
       return;
@@ -185,36 +184,43 @@ export default class Block {
     });
   }
 
-  compile(tmpl: string): DocumentFragment {
+  protected compile(tmpl: string): DocumentFragment {
     const propsAndStubs: any = { ...this.props };
-    Object.entries(this.children).forEach(([key, child]) => {
-      propsAndStubs[key] = `<div data-id="${child.id}"></div>`;
+
+    Object.entries(this.children).forEach(([name, component]) => {
+      if (Array.isArray(component)) {
+        propsAndStubs[name] = component.map((child) => `<div data-id="${child.id}"></div>`);
+      } else {
+        propsAndStubs[name] = `<div data-id="${component.id}"></div>`;
+      }
     });
+
     const fragment = document.createElement('template');
 
     const template = Handlebars.compile(tmpl);
+
     fragment.innerHTML = template({
-      ...this.props,
       children: this.children,
-      refs: this.refs,
       ...propsAndStubs,
     });
 
-    Object.entries(this.children).forEach(([, component]) => {
+    const replaceStub = (component: Block) => {
       const stub = fragment.content.querySelector(`[data-id="${component.id}"]`);
 
       if (!stub) {
         return;
       }
 
-      const stubChilds = stub.childNodes.length ? stub.childNodes : [];
+      component.getContent()?.append(...Array.from(stub.childNodes));
 
-      const content = component.getContent();
-      stub.replaceWith(content);
+      stub.replaceWith(component.getContent()!);
+    };
 
-      const layoutContent = content.querySelector('[data-layout="1"]');
-      if (layoutContent && stubChilds.length) {
-        layoutContent.append(...stubChilds);
+    Object.entries(this.children).forEach(([, component]) => {
+      if (Array.isArray(component)) {
+        component.forEach(replaceStub);
+      } else {
+        replaceStub(component);
       }
     });
 

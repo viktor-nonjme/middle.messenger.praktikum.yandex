@@ -33,6 +33,10 @@
     "no-console": "off",
     "no-param-reassign": "off",
     "no-use-before-define": "off",
+    "import/no-cycle": "off",
+    "no-continue": "off",
+    "no-prototype-builtins": "off",
+    "no-useless-constructor": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -45,10 +49,11 @@
       }
     ],
     "no-underscore-dangle": [
-      2,
+      0,
       {
         "allowAfterThis": true
       }
-    ]
+    ],
+    "no-constructor-return": 0
   }
 }

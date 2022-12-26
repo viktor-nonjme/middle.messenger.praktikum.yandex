@@ -1,2 +1,2 @@
 export default `
-    <button class="button-primary" type="{{ type }}">{{ title }}</button>`;
+    <button class="button-primary {{ className }} {{ disabledClassName }}" type="{{ type }}" {{ isDisabled }}>{{ title }}</button>`;

@@ -1,32 +1,38 @@
 import template from './index.template';
+
+import MessagesService from '../../services/messages';
+
 import Block from '../../utils/Block';
 import Validation from '../../utils/Validation';
-import { events } from '../../utils/events';
 
-type FormSendProps = { [key: string]: string };
+import Tooltip from '../../UI/Tooltip';
 
 export default class FormSendMessage extends Block {
-  constructor(props: FormSendProps) {
-    const state = {};
+  constructor(props: { [key: string]: string }) {
     super({
       ...props,
       events: {
-        input: (event: Event) => events.input(event, state),
         submit: (event: Event) => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
+          const formName = form.name as string;
           const formIsValid = Validation.onSubmitValidation(form);
-          console.log('formIsValid', formIsValid);
-          self.setProps({
-            value: '',
-            error: '',
-          });
+          const input = form.elements[formName as any] as HTMLInputElement;
+          const { error } = Validation.checkElement(input);
+
+          if (formIsValid) {
+            MessagesService.sendMessage(input.value);
+
+            this.setProps({
+              value: '',
+              error: '',
+            });
+          } else {
+            Tooltip.setProps({ type: 'warning', text: `Произошла ошибка: ${error}` });
+          }
         },
-        focus: events.focus,
-        blur: (event: Event) => events.blur(self, event),
       },
     });
-    const self = this;
   }
 
   render() {

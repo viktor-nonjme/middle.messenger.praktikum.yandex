@@ -11,8 +11,7 @@
     "noUnusedParameters": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*"],
-  "exclude": [
-    "node_modules"
-  ]
+  "typeRoots" : ["node_modules/@types", "typings/app.d.ts"],
+  "include": ["src/**/*", "typings/**/*"],
+  "exclude": ["node_modules"]
 }

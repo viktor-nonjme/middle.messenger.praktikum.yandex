@@ -1,20 +1,50 @@
 import './index.scss';
-import Block from '../../utils/Block';
-import EmptyChat from '../../components/EmptyChat';
-import Chat from '../../components/Chat';
-import { MessagesList } from '../../components/MessagesList';
-import { messages, chatMessages } from '../../data';
+
 import template from './index.template';
 
-export class ChatPage extends Block {
-  constructor() {
-    const messagesList = new MessagesList({ messages });
+import Block from '../../utils/Block';
+import { connect } from '../../utils/connect';
 
-    const chat = window.location.pathname.startsWith('/id') ? new Chat({ chatMessages }) : new EmptyChat();
+import Chat from '../../components/Chat';
+import ChatList from '../../components/ChatList';
+
+import PopupCreateChat from '../../components/PopupCreateChat';
+import PopupAddUsers from '../../components/PopupAddUsers';
+import PopupDeleteUsers from '../../components/PopupDeleteUsers';
+
+import Link from '../../UI/Link';
+import Tooltip from '../../UI/Tooltip';
+import InputSearch from '../../UI/InputSearch';
+import ColumnResize from '../../UI/ColumnResize';
+import Spinner from '../../UI/Spinner';
+
+import { TProps } from '../../types';
+
+class ChatPage extends Block {
+  constructor() {
+    const link = new Link({
+      className: 'messages-list-link',
+      to: '/settings',
+      title: 'Профиль',
+    });
+
+    const chat = new Chat();
+
+    const inputSearch = new InputSearch();
+
+    const columnResize = new ColumnResize();
 
     super({
-      messagesList,
+      ChatList,
       chat,
+      link,
+      Tooltip,
+      inputSearch,
+      columnResize,
+      Spinner,
+      PopupCreateChat,
+      PopupAddUsers,
+      PopupDeleteUsers,
     });
   }
 
@@ -22,3 +52,17 @@ export class ChatPage extends Block {
     return this.compile(template);
   }
 }
+
+function mapStateToProps(state: TProps) {
+  if (state.chats) {
+    const { chats } = state;
+    return {
+      chats,
+    };
+  }
+  return {
+    chats: [],
+  };
+}
+
+export default connect(ChatPage, mapStateToProps);
