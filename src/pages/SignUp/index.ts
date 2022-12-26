@@ -8,6 +8,7 @@ import InputField from '../../components/InputField';
 import Button from '../../UI/Button';
 import tooltip from '../../UI/Tooltip';
 import Link from '../../UI/Link';
+import Spinner from '../../UI/Spinner';
 
 import Block from '../../utils/Block';
 import Validation from '../../utils/Validation';
@@ -120,6 +121,7 @@ export default class SignUpPage extends Block {
       button,
       link,
       tooltip,
+      Spinner,
       events: {
         change: (event: Event) => {
           event.preventDefault();

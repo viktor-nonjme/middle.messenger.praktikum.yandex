@@ -21,6 +21,10 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+
+      input[type="checkbox"] {
+        margin-right: 12px;
+      }
     }
   }
 }

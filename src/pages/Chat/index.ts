@@ -7,7 +7,10 @@ import { connect } from '../../utils/connect';
 
 import Chat from '../../components/Chat';
 import ChatList from '../../components/ChatList';
-import Popup from '../../components/Popup';
+
+import PopupCreateChat from '../../components/PopupCreateChat';
+import PopupAddUsers from '../../components/PopupAddUsers';
+import PopupDeleteUsers from '../../components/PopupDeleteUsers';
 
 import Link from '../../UI/Link';
 import Tooltip from '../../UI/Tooltip';
@@ -39,7 +42,9 @@ class ChatPage extends Block {
       inputSearch,
       columnResize,
       Spinner,
-      Popup,
+      PopupCreateChat,
+      PopupAddUsers,
+      PopupDeleteUsers,
     });
   }
 

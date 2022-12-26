@@ -18,6 +18,8 @@ export default `
 
                             <div class="chat-header-menu-dropdown">
                                 <ul>
+                                    <li class="add-users">Добавить пользователй</li>
+                                    <li class="delete-users">Удалить пользователй</li>
                                     <li class="delete-chat">Удалить чат</li>
                                 </ul>
                             </div>

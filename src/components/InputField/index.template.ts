@@ -6,10 +6,11 @@ export default `
         name="{{ name }}" 
         id="{{ id }}" 
         type="{{ type }}" 
-        value="{{ value }}" 
+        value="{{ value }}"
+        {{#if placeholder}}placeholder="{{ placeholder }}"{{/if}}
         {{#if minlength}}minlength="{{ minlength }}"{{/if}}
         {{#if maxlength}}maxlength="{{ maxlength }}"{{/if}}
-        {{ isRequired }}
+        {{#if maxlength}}{{ isRequired }}{{/if}}
     />
     <span class="error">{{ error }}</span>
 </div>

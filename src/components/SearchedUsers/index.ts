@@ -20,6 +20,7 @@ class SearchedUsers extends Block {
       avatar: pepeAvatar,
       searchIcon,
       selectedUsers: [],
+      users: props.users,
       events: {
         click: (event: Event) => {
           if ((event.target! as Element).classList.contains('select-user')) {

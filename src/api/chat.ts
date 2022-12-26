@@ -28,6 +28,14 @@ class ChatApi {
   deleteChat(data: XMLHttpRequestBodyInit) {
     return request.delete('chats', { headers: { 'Content-Type': 'application/json' }, data });
   }
+
+  getChatUsers(id: string) {
+    return request.get(`chats/${id}/users`);
+  }
+
+  deleteChatUsers(data: XMLHttpRequestBodyInit) {
+    return request.delete('chats/users', { headers: { 'Content-Type': 'application/json' }, data });
+  }
 }
 
 export default new ChatApi();

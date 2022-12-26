@@ -26,6 +26,7 @@ class Validation {
     password_repeat: (value: string, original: string) => Validation.passwordRepeatValidation(value, original),
     newPasswordRepeat: (value: string, original: string) => Validation.newPasswordRepeatValidation(value, original),
     chat_name: (value: string) => Validation.nameValidation(value),
+    find_users: (value: string) => Validation.loginValidation(value),
   };
 
   static inputValidation(value: string | number, reg: RegExp) {
