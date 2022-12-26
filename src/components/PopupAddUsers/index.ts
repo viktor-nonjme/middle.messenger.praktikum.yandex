@@ -1,8 +1,7 @@
-import './index.scss';
-
 import template from './index.template';
 
 import Block from '../../utils/Block';
+import Store from '../../utils/Store';
 
 import InputField from '../InputField';
 import SearchedUsers from '../SearchedUsers';
@@ -14,30 +13,30 @@ import ChatService from '../../services/chat';
 
 import { TProps } from '../../types';
 
-class Popup extends Block {
+class PopupAddUsers extends Block {
   constructor(props: TProps) {
-    const inputNameChat = new InputField({
-      name: 'chat_name',
-      id: 'chatName',
+    const inputFindUsers = new InputField({
+      name: 'find_users',
+      id: 'findUsers',
       type: 'text',
-      label: 'Название нового чата',
+      label: 'Найти пользователей',
+      placeholder: 'Введите логин',
       value: '',
       error: '',
       minlength: '2',
       maxlength: '30',
-      isRequired: 'required',
     });
 
     const button = new Button({
       type: 'submit',
-      title: 'Создать',
+      title: 'Добавить',
       isDisabled: '',
       disabledClassName: '',
     });
 
     super({
       ...props,
-      inputNameChat,
+      inputFindUsers,
       button,
       isOpened: false,
       SearchedUsers,
@@ -48,7 +47,7 @@ class Popup extends Block {
           }
         },
         input: (event: Event) => {
-          if ((event.target! as Element).classList.contains('input-users')) {
+          if ((event.target! as Element).id === 'findUsers') {
             const element = event.target as HTMLInputElement;
 
             const { value } = element;
@@ -59,11 +58,13 @@ class Popup extends Block {
         submit: (event: Event) => {
           event.preventDefault();
 
+          const chatId = Store.getState().currentChat.id;
+
           const selectedUsersId = SearchedUsers.props.selectedUsers.map((select: TProps) => select.id);
 
-          const title = inputNameChat.props.value;
+          const request = JSON.stringify({ users: [...selectedUsersId], chatId });
 
-          ChatService.createChat(JSON.stringify({ title }), selectedUsersId);
+          ChatService.addUsersToChat(request);
         },
       },
     });
@@ -74,4 +75,4 @@ class Popup extends Block {
   }
 }
 
-export default new Popup({});
+export default new PopupAddUsers({});

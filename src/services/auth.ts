@@ -1,71 +1,86 @@
 import AuthApi from '../api/auth';
 
 import Store from '../utils/Store';
-import Router from '../utils/Router';
-
-import Tooltip from '../UI/Tooltip';
-
-import { TProps } from '../types';
 
 import ChatService from './chat';
 import MessagesService from './messages';
 
-class AuthService {
+import BaseService from './base';
+
+import { TProps } from '../types';
+
+class AuthService extends BaseService {
+  constructor() {
+    super();
+  }
+
   public signup(data: XMLHttpRequestBodyInit, inputs: TProps) {
+    this.toggleSpinner(false);
+
     AuthApi.signup(data)
       .then((result) => {
         if (result.status === 200) {
-          Tooltip.setProps({ type: 'success', text: `Вы успешно зарегистрированы. ID: ${JSON.parse(result.responseText).id}` });
+          const successResponse = JSON.parse(result.responseText).id;
 
-          Object.values(inputs).forEach((element) => {
-            if (element.props.value !== undefined) {
-              element.setProps({ value: '', error: '' });
-            }
-          });
+          this.displayTooltip('success', `Вы успешно зарегистрированы. ID: ${successResponse}`);
 
-          setTimeout(() => {
-            Router.go('/messenger');
-          }, 1200);
+          this.clearForm(inputs);
+
+          this.redurectTo('/messenger', 1200);
         } else {
-          Tooltip.setProps({ type: 'warning', text: `Произошла ошибка: ${JSON.parse(result.responseText).reason}` });
+          const errorReason = JSON.parse(result.responseText).reason;
+
+          this.displayTooltip('warning', `Произошла ошибка: ${errorReason}`);
+
+          if (errorReason === 'User already in system') {
+            this.redurectTo('/messenger', 1200);
+          }
         }
       })
       .then(() => {
         this.getUser();
       })
       .catch((error) => {
-        Tooltip.setProps({ type: 'warning', text: 'Произошла ошибка 😔😔' });
+        this.displayTooltip('warning', 'Произошла ошибка 😔😔');
 
         console.log('error', error);
+      })
+      .finally(() => {
+        this.toggleSpinner(true);
       });
   }
 
   public signin(data: XMLHttpRequestBodyInit, inputs: TProps) {
+    this.toggleSpinner(false);
+
     AuthApi.signin(data)
       .then((result) => {
         if (result.status === 200) {
-          Tooltip.setProps({ type: 'success', text: 'Вы успешно вошли' });
+          this.displayTooltip('success', 'Вы успешно вошли');
 
-          Object.values(inputs).forEach((element) => {
-            if (element.props.value !== undefined) {
-              element.setProps({ value: '', error: '' });
-            }
-          });
+          this.clearForm(inputs);
 
-          setTimeout(() => {
-            Router.go('/messenger');
-          }, 1200);
+          this.redurectTo('/messenger', 1200);
         } else {
-          Tooltip.setProps({ type: 'warning', text: `Произошла ошибка: ${JSON.parse(result.responseText).reason}` });
+          const errorReason = JSON.parse(result.responseText).reason;
+
+          this.displayTooltip('warning', `Произошла ошибка: ${errorReason}`);
+
+          if (errorReason === 'User already in system') {
+            this.redurectTo('/messenger', 1200);
+          }
         }
       })
       .then(() => {
         this.getUser();
       })
       .catch((error) => {
-        Tooltip.setProps({ type: 'warning', text: 'Произошла ошибка 😔😔' });
+        this.displayTooltip('warning', 'Произошла ошибка 😔😔');
 
         console.log('error', error);
+      })
+      .finally(() => {
+        this.toggleSpinner(true);
       });
   }
 
@@ -74,9 +89,11 @@ class AuthService {
       .me()
       .then((data: XMLHttpRequest) => {
         if (data.status === 200) {
+          const userData = JSON.parse(data.response);
+
           Store.initState();
 
-          Store.set('user', JSON.parse(data.response));
+          Store.set('user', userData);
 
           Store.set('isAuth', true);
 
@@ -84,15 +101,17 @@ class AuthService {
         } else {
           const { isAuth } = Store.getState();
 
+          const errorReason = JSON.parse(data.responseText).reason;
+
           if (isAuth) {
-            Tooltip.setProps({ type: 'warning', text: `Произошла ошибка: ${JSON.parse(data.responseText).reason}. Войдите заново в систему` });
+            this.displayTooltip('warning', `Произошла ошибка: ${errorReason}. Войдите заново в систему`);
           }
 
           Store.initState();
         }
       })
       .catch((error) => {
-        Tooltip.setProps({ type: 'warning', text: 'Произошла ошибка 😔😔' });
+        this.displayTooltip('warning', 'Произошла ошибка 😔😔');
 
         console.log('error', error);
       });
@@ -102,14 +121,14 @@ class AuthService {
     AuthApi
       .logout()
       .then(() => {
-        Router.go('/');
+        this.redurectTo('/', 0);
 
         MessagesService.close();
 
         Store.removeState();
       })
       .catch((error) => {
-        Tooltip.setProps({ type: 'warning', text: 'Произошла ошибка 😔😔' });
+        this.displayTooltip('warning', 'Произошла ошибка 😔😔');
 
         console.log('error', error);
       });

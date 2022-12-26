@@ -8,6 +8,7 @@ import InputField from '../../components/InputField';
 import Button from '../../UI/Button';
 import Link from '../../UI/Link';
 import tooltip from '../../UI/Tooltip';
+import Spinner from '../../UI/Spinner';
 
 import Block from '../../utils/Block';
 import Validation from '../../utils/Validation';
@@ -59,6 +60,7 @@ export default class SignInPage extends Block {
       password,
       link,
       tooltip,
+      Spinner,
       events: {
         change: (event: Event) => {
           event.preventDefault();

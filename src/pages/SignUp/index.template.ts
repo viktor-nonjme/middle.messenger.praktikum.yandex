@@ -3,6 +3,8 @@ export default `
 
     {{{ tooltip }}}
 
+    {{{ Spinner }}}
+
     <form class="form-main" name="sign-up" novalidate>
         <fieldset class="form-main-content">
             <legend class="form-main-legend">Регистрация</legend>

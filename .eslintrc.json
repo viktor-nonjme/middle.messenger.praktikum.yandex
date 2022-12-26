@@ -36,6 +36,7 @@
     "import/no-cycle": "off",
     "no-continue": "off",
     "no-prototype-builtins": "off",
+    "no-useless-constructor": "off",
     "import/extensions": [
       "error",
       "ignorePackages",

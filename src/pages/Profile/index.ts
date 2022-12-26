@@ -153,7 +153,7 @@ class ProfilePage extends Block {
                 }
               }
             }
-            console.log(isValidForm);
+
             if (isValidForm) {
               button.setProps({ isDisabled: '', disabledClassName: '' });
             } else {

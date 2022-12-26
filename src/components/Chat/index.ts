@@ -6,17 +6,21 @@ import template from './index.template';
 
 import Block from '../../utils/Block';
 import { connect } from '../../utils/connect';
+import { toDate } from '../../utils/helpers';
 
 import FormSendMessage from '../FormSendMessage';
 import EmptyChat from '../EmptyChat';
 import SelectedUser from '../SelectedUser';
 import MessageComponent from '../Message';
+import SearchedUsers from '../SearchedUsers';
+
+import PopupAddUsers from '../PopupAddUsers';
+import PopupDeleteUsers from '../PopupDeleteUsers';
 
 import { StoreInterface, TProps, Message } from '../../types';
 
 import { BASE_URL_RESOURCES } from '../../consts';
 
-import { toDate } from '../../utils/helpers';
 import ChatService from '../../services/chat';
 
 class Chat extends Block {
@@ -44,6 +48,30 @@ class Chat extends Block {
         click: (event: Event) => {
           if ((event.target! as Element).classList.contains('delete-chat')) {
             ChatService.deleteChat(JSON.stringify({ chatId: this.props.currentChat.id }));
+          }
+
+          if ((event.target! as Element).classList.contains('add-users')) {
+            SearchedUsers.setProps({
+              users: [],
+              selectedUsers: [],
+            });
+
+            PopupAddUsers.setProps({
+              isOpened: true,
+            });
+          }
+
+          if ((event.target! as Element).classList.contains('delete-users')) {
+            SearchedUsers.setProps({
+              users: [],
+              selectedUsers: [],
+            });
+
+            ChatService.getChatUsers();
+
+            PopupDeleteUsers.setProps({
+              isOpened: true,
+            });
           }
         },
       },

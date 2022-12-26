@@ -5,7 +5,11 @@ export default `
 
   {{{ Spinner }}}
 
-  {{{ Popup }}}
+  {{{ PopupCreateChat }}}
+
+  {{{ PopupAddUsers }}}
+
+  {{{ PopupDeleteUsers }}}
 
   <div class="messages-list">
 

@@ -3,48 +3,50 @@ import ChatApi from '../api/chat';
 import Store from '../utils/Store';
 import { toDate } from '../utils/helpers';
 
-import Spinner from '../UI/Spinner';
-import Tooltip from '../UI/Tooltip';
-
 import ChatList from '../components/ChatList';
-import Popup from '../components/Popup';
+
+import PopupCreateChat from '../components/PopupCreateChat';
+import PopupAddUsers from '../components/PopupAddUsers';
+import PopupDeleteUsers from '../components/PopupDeleteUsers';
+
+import SearchedUsers from '../components/SearchedUsers';
 
 import MessagesService from './messages';
 
+import BaseService from './base';
+
 import { TProps } from '../types';
 
-class ChatService {
+class ChatService extends BaseService {
+  constructor() {
+    super();
+  }
+
   createChat(data: XMLHttpRequestBodyInit, userId: number[]) {
-    Spinner.setProps({ isHidden: false });
+    this.toggleSpinner(false);
 
     ChatApi.createChat(data)
-      .then((result) => {
+      .then(async (result) => {
         if (result.status === 200) {
-          Tooltip.setProps({ type: 'success', text: 'Вы успешно создали чат' });
+          this.displayTooltip('success', 'Вы успешно создали чат');
 
           const chatId = JSON.parse(result.response).id;
 
           const request = JSON.stringify({ users: [...userId], chatId });
 
-          const chatTitle = userId.length === 1 ? JSON.parse(data as string).title.split(' connecting... ')[0] : JSON.parse(data as string).title;
+          const { title } = JSON.parse(data as string);
 
-          ChatApi.addUserToChat(request)
-            .then((response) => {
-              if (response.status === 200) {
-                const isGroupChat = userId.length > 2;
+          const chatTitle = userId.length === 1 ? title.split(' connecting... ')[0] : title;
 
-                this.startChating(chatId, chatTitle, isGroupChat);
+          const isGroupChat = userId.length > 2;
 
-                Popup.setProps({
-                  isOpened: false,
-                });
-              }
-            })
-            .catch((error) => {
-              console.log('error', error);
-            });
+          await this.addUsersToChat(request);
+
+          await this.startChating(chatId, chatTitle, isGroupChat);
         } else {
-          Tooltip.setProps({ type: 'warning', text: `Произошла ошибка: ${JSON.parse(result.responseText).reason}` });
+          const errorReason = JSON.parse(result.responseText).reason;
+
+          this.displayTooltip('warning', `Произошла ошибка: ${errorReason}`);
         }
       })
       .then(() => {
@@ -52,9 +54,11 @@ class ChatService {
       })
       .catch((error) => {
         console.log('error', error);
+
+        this.displayTooltip('warning', 'Произошла ошибка 😔😔');
       })
       .finally(() => {
-        Spinner.setProps({ isHidden: true });
+        this.toggleSpinner(true);
       });
   }
 
@@ -64,49 +68,9 @@ class ChatService {
         if (result.status === 200) {
           const userId = Store.getState().user.id;
 
-          const chats = JSON.parse(result.response).map((chat: TProps) => {
-            const isCreator = userId === chat.created_by;
+          const chatsData = JSON.parse(result.response);
 
-            const commotChat = chat.title.includes(' connecting... ');
-
-            const displayTitle = (isCommonChat: boolean) => {
-              if (isCommonChat) {
-                const [first, second] = chat.title.split(' connecting... ');
-
-                const newTitle = isCreator ? first : second;
-
-                return newTitle;
-              }
-
-              return chat.title;
-            };
-
-            const title = displayTitle(commotChat);
-
-            const lastMessages = chat.last_message;
-
-            delete chat.title;
-
-            delete chat.last_message;
-
-            if (lastMessages) {
-              const newTime = toDate(lastMessages.time);
-
-              lastMessages.time = newTime;
-
-              return {
-                ...chat,
-                title,
-                last_message: lastMessages,
-              };
-            }
-
-            return {
-              ...chat,
-              title,
-              last_message: null,
-            };
-          });
+          const chats = this.mapChats(chatsData, userId);
 
           ChatList.setProps({
             chats,
@@ -118,7 +82,7 @@ class ChatService {
         }
       })
       .catch((error) => {
-        Tooltip.setProps({ type: 'warning', text: 'Произошла ошибка' });
+        this.displayTooltip('warning', 'Произошла ошибка 😔😔');
 
         console.log('error', error);
       });
@@ -144,10 +108,12 @@ class ChatService {
           });
         }
       })
-      .catch(() => {
-        Tooltip.setProps({ type: 'warning', text: 'Произошла ошибка' });
+      .catch((error) => {
+        this.displayTooltip('warning', 'Произошла ошибка 😔😔');
 
         Store.set('emptyChat', true);
+
+        console.log(error);
       });
   }
 
@@ -157,11 +123,11 @@ class ChatService {
 
   getCommonChat(chatId: number) {
     ChatApi.getCommonChat(String(chatId))
-      .then((res) => {
-        console.log(res);
+      .then((result) => {
+        console.log(result);
       })
       .catch((error) => {
-        console.log('error', error);
+        console.log(error);
       });
   }
 
@@ -175,7 +141,7 @@ class ChatService {
     ChatApi.deleteChat(data)
       .then(async (result) => {
         if (result.status === 200) {
-          Tooltip.setProps({ type: 'success', text: 'Вы успешно удалили чат' });
+          this.displayTooltip('success', 'Вы успешно удалили чат');
 
           await MessagesService.close();
 
@@ -185,17 +151,136 @@ class ChatService {
 
           Store.set('currentChat', null);
         } else {
-          Tooltip.setProps({ type: 'warning', text: `Произошла ошибка: ${JSON.parse(result.responseText).reason}` });
+          const errorReason = JSON.parse(result.responseText).reason;
+
+          this.displayTooltip('warning', `Произошла ошибка: ${errorReason}`);
         }
       })
       .then(() => {
         this.getChats();
       })
       .catch((error) => {
-        Tooltip.setProps({ type: 'warning', text: 'Произошла ошибка' });
+        this.displayTooltip('warning', 'Произошла ошибка 😔😔');
 
         console.log('error', error);
       });
+  }
+
+  addUsersToChat(data: XMLHttpRequestBodyInit) {
+    ChatApi.addUserToChat(data)
+      .then((result) => {
+        if (result.status === 200) {
+          PopupCreateChat.setProps({
+            isOpened: false,
+          });
+
+          PopupAddUsers.setProps({
+            isOpened: false,
+          });
+
+          this.displayTooltip('success', 'Чат обновлён или создан');
+        } else {
+          const errorReason = JSON.parse(result.responseText).reason;
+
+          this.displayTooltip('warning', `Произошла ошибка: ${errorReason}`);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+
+        this.displayTooltip('warning', 'Произошла ошибка 😔😔');
+      });
+  }
+
+  deleteUsersFromChat(userId: number[]) {
+    const chatId = Store.getState().currentChat.id;
+
+    const request = JSON.stringify({ users: [...userId], chatId });
+
+    ChatApi.deleteChatUsers(request)
+      .then((result) => {
+        if (result.status === 200) {
+          PopupDeleteUsers.setProps({
+            isOpened: false,
+          });
+
+          this.displayTooltip('success', 'Пользовател(ь/и) удалены');
+        } else {
+          const errorReason = JSON.parse(result.responseText).reason;
+
+          this.displayTooltip('warning', `Произошла ошибка: ${errorReason}`);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+
+        this.displayTooltip('warning', 'Произошла ошибка 😔😔');
+      });
+  }
+
+  getChatUsers() {
+    const chatId = Store.getState().currentChat.id;
+
+    ChatApi.getChatUsers(String(chatId))
+      .then((result) => {
+        if (result.status === 200) {
+          const users = JSON.parse(result.response);
+
+          SearchedUsers.setProps({
+            isUsers: true,
+            users,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  private displayTitle(isCommonChat: boolean, chat: TProps, isCreator: boolean) {
+    if (isCommonChat) {
+      const [first, second] = chat.title.split(' connecting... ');
+
+      const newTitle = isCreator ? first : second;
+
+      return newTitle;
+    }
+
+    return chat.title;
+  }
+
+  private mapChats(chats: TProps, userId: number) {
+    return chats.map((chat: TProps) => {
+      const isCreator = userId === chat.created_by;
+
+      const commonChat = chat.title.includes(' connecting... ');
+
+      const title = this.displayTitle(commonChat, chat, isCreator);
+
+      const lastMessages = chat.last_message;
+
+      delete chat.title;
+
+      delete chat.last_message;
+
+      if (lastMessages) {
+        const newTime = toDate(lastMessages.time);
+
+        lastMessages.time = newTime;
+
+        return {
+          ...chat,
+          title,
+          last_message: lastMessages,
+        };
+      }
+
+      return {
+        ...chat,
+        title,
+        last_message: null,
+      };
+    });
   }
 }
 

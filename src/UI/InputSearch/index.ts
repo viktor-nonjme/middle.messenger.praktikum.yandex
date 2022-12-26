@@ -4,7 +4,8 @@ import template from './index.template';
 
 import Block from '../../utils/Block';
 
-import Popup from '../../components/Popup';
+import PopupCreateChat from '../../components/PopupCreateChat';
+import SearchedUsers from '../../components/SearchedUsers';
 
 import ProfileService from '../../services/profile';
 
@@ -22,7 +23,12 @@ export default class InputSearch extends Block {
           if ((event.target! as Element).classList.contains('messages-list-input-button')
             || (event.target! as Element).classList.contains('messages-list-input-svg')
             || (event.target! as Element).classList.contains('messages-list-input-svg-path')) {
-            Popup.setProps({ isOpened: true });
+            SearchedUsers.setProps({
+              users: [],
+              selectedUsers: [],
+            });
+
+            PopupCreateChat.setProps({ isOpened: true });
           }
         },
       },
