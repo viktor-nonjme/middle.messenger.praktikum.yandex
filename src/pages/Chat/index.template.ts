@@ -1,13 +1,32 @@
 export default `
 <main class="container-grid">
+
+  {{{ Tooltip }}}
+
+  {{{ Spinner }}}
+
+  {{{ PopupCreateChat }}}
+
+  {{{ PopupAddUsers }}}
+
+  {{{ PopupDeleteUsers }}}
+
   <div class="messages-list">
+
     <div class="messages-list-content">
-      <a class="messages-list-link" href="/profile" title="Редактировать профиль">Профиль</a>
-      <input class="messages-list-input" placeholder="Поиск" type="text"/>
-        <div class="messages-list-items">
-          {{{ messagesList }}}
-        </div>
+
+      {{{ link }}}
+
+      {{{ inputSearch }}}
+
+      {{{ ChatList }}}
+
     </div>
+
   </div>
+
+  {{{ columnResize }}}
+
   {{{ chat }}}
+
 </main>`;

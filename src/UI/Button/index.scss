@@ -9,3 +9,22 @@
   border-radius: var(--border-radius-8);
   color: var(--white);
 }
+
+.button-primary-disabled {
+  background-color: var(--gray);
+}
+
+.button-logout {
+  color: var(--red);
+  text-align: center;
+  padding: 10px;
+  display: block;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.button-avatar {
+  width: 280px;
+}

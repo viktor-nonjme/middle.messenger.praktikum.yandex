@@ -1,5 +1,9 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
+import { TProps } from '../types';
+
+const BASE_URL = 'https://ya-praktikum.tech/api/v2/';
+
 enum METHOD {
   GET = 'GET',
   POST = 'POST',
@@ -8,9 +12,9 @@ enum METHOD {
 }
 
 type Options = {
-  method: METHOD
-  data?: Record<string, any>
-  headers?: Record<string, string>
+  method: METHOD;
+  data?: TProps | XMLHttpRequestBodyInit;
+  headers?: Record<string, string>;
 };
 
 type OptionsWithoutMethod = Omit<Options, 'method'>;
@@ -19,8 +23,9 @@ type HTTPMethod = (url: string, options?: OptionsWithoutMethod) => Promise<XMLHt
 
 class HTTPTransport {
   get: HTTPMethod = (url, options = {}) => {
-    if (options.data) {
-      url = `${url}${this.queryStringify(options.data)}`;
+    const { data } = options;
+    if (data) {
+      url = `${url}${this.queryStringify(data as TProps)}`;
     }
     return this.request(url, { ...options, method: METHOD.GET });
   };
@@ -42,14 +47,17 @@ class HTTPTransport {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
+      xhr.withCredentials = true;
+
+      url = BASE_URL + url;
+
       xhr.open(method, url);
 
       Object.keys(headers).forEach((key) => {
         xhr.setRequestHeader(key, headers[key]);
       });
 
-      // eslint-disable-next-line func-names
-      xhr.onload = function () {
+      xhr.onload = function cb() {
         resolve(xhr);
       };
 
@@ -66,4 +74,4 @@ class HTTPTransport {
   }
 }
 
-export default HTTPTransport;
+export default new HTTPTransport();

@@ -1,45 +1,67 @@
 export default `
 <div class="chat">
-    <div class="chat-content">
 
-        <header class="chat-header">
+        {{#if currentChat}}
+            <div class="chat-content">
 
-            <div class="chat-header-avatar"></div>
-            <p><strong class="chat-header-user">Вадим</strong></p>
-            <div class="chat-header-menu">
-                <svg class="chat-header-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="9" height="9" viewBox="0 0 512 512"><title>ionicons-v5-f</title><circle cx="256" cy="256" r="48"/><circle cx="256" cy="416" r="48"/><circle cx="256" cy="96" r="48"/></svg>
-                <input type="checkbox" />
+                <header class="chat-header">
 
-                <div class="chat-header-menu-dropdown">
-                    <ul>
-                        <li>Добавить пользователя</li>
-                        <li>Удалить пользователя</li>
-                    </ul>
+                    <div class="chat-header-avatar">
+                        <img src="{{#if currentChat.avatar}}{{ baseUrl }}{{ currentChat.avatar }}{{else}}{{ defaultAvatar }}{{/if}}" />
+                    </div>
+                    <p><strong class="chat-header-user">{{ currentChat.title }}</strong></p>
+
+                        <div class="chat-header-menu">
+
+                            <svg class="chat-header-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="9" height="9" viewBox="0 0 512 512"><title>ionicons-v5-f</title><circle cx="256" cy="256" r="48"/><circle cx="256" cy="416" r="48"/><circle cx="256" cy="96" r="48"/></svg>
+                            <input type="checkbox" />
+
+                            <div class="chat-header-menu-dropdown">
+                                <ul>
+                                    <li class="add-users">Добавить пользователй</li>
+                                    <li class="delete-users">Удалить пользователй</li>
+                                    <li class="delete-chat">Удалить чат</li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                </header>
+
+                <div class="chat-messages">
+
+                    <p class="chat-start">Чат создан</p>
+
+                    {{#each messages}}
+
+                        {{{ this }}}
+
+                    {{/each}}
+
                 </div>
+
+                <footer class="chat-footer">
+
+                    {{{ formSendMessage }}}
+
+                </footer>
 
             </div>
 
-        </header>
+        {{/if}}
 
-        <div class="chat-messages">
+        {{#if selectedUser}}
 
-            <p class="chat-date">19 июня</p>
+            {{{ FoundUser }}}
 
-            {{#each chatMessages}}
-                <div id={{ id }}"" class="chat-message {{ type }}">
-                    <p class="chat-message-text">
-                        {{ text }}
-                    </p>
-                    <p class="date chat-message-date">{{ date }}</p>
-                </div>
-            {{/each}}
+        {{/if}}
 
-        </div>
+        {{#if isEmptyChat}}
+            <div class="chat-content">
 
-        <footer class="chat-footer">
+                {{{ emptyChat }}}
 
-            {{{ formSendMessage }}}
+            </div>
+        {{/if}}
 
-        </footer>
-    </div>
 </div>`;

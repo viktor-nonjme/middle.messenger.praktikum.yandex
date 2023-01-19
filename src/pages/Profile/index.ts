@@ -1,58 +1,231 @@
 import './index.scss';
-import '../../styles/profile.scss';
-// @ts-ignore
-import account from '../../assets/images/account.png';
-import Input from '../../UI/Input';
-import Button from '../../UI/Button';
-import Block from '../../utils/Block';
+
+import pepeAvatar from '../../assets/images/pepe.png';
+
 import template from './index.template';
-import { events } from '../../utils/events';
 
-export default class ProfilePage extends Block {
-  constructor() {
-    const state = {};
+import Button from '../../UI/Button';
+import tooltip from '../../UI/Tooltip';
+import Link from '../../UI/Link';
+import Spinner from '../../UI/Spinner';
 
-    const email = new Input({
-      name: 'email', id: 'email', type: 'email', label: 'Почта', value: 'smg93880@gmail.com', error: '',
+import LinkToChat from '../../components/LinkToChat';
+import FormAvatar from '../../components/FormAvatar';
+import InputField from '../../components/InputField';
+
+import Block from '../../utils/Block';
+import Validation from '../../utils/Validation';
+import { connect } from '../../utils/connect';
+
+import AuthService from '../../services/auth';
+import ProfileService from '../../services/profile';
+
+import { BASE_URL_RESOURCES } from '../../consts';
+
+import { TProps } from '../../types';
+
+class ProfilePage extends Block {
+  constructor(props: TProps) {
+    const linkToChat = new LinkToChat({
+      to: '/messenger',
     });
 
-    const login = new Input({
-      name: 'login', id: 'login', type: 'text', label: 'Логин', value: 'viktornonjme', error: '',
+    const emailInput = new InputField({
+      name: 'email',
+      id: 'email',
+      type: 'email',
+      label: 'Почта',
+      value: props.email,
+      error: '',
+      isRequired: 'required',
     });
 
-    const firstName = new Input({
-      name: 'first_name', id: 'firstName', type: 'text', label: 'Имя', value: 'Виктор', error: '',
+    const loginInput = new InputField({
+      name: 'login',
+      id: 'login',
+      type: 'text',
+      label: 'Логин',
+      value: props.login,
+      error: '',
+      minlength: '2',
+      maxlength: '30',
+      isRequired: 'required',
     });
 
-    const secondName = new Input({
-      name: 'second_name', id: 'secondName', type: 'text', label: 'Фамилия', value: 'Кулешов', error: '',
+    const firstNameInput = new InputField({
+      name: 'first_name',
+      id: 'firstName',
+      type: 'text',
+      label: 'Имя',
+      value: props.first_name,
+      error: '',
+      minlength: '2',
+      maxlength: '30',
+      isRequired: 'required',
     });
 
-    const phone = new Input({
-      name: 'phone', id: 'phone', type: 'tel', label: 'Телефон', value: '375296668084', error: '',
+    const secondNameInput = new InputField({
+      name: 'second_name',
+      id: 'secondName',
+      type: 'text',
+      label: 'Фамилия',
+      value: props.second_name,
+      error: '',
+      minlength: '2',
+      maxlength: '30',
+      isRequired: 'required',
+    });
+
+    const phoneInput = new InputField({
+      name: 'phone',
+      id: 'phone',
+      type: 'tel',
+      label: 'Телефон',
+      value: props.phone,
+      error: '',
+      isRequired: 'required',
     });
 
     const button = new Button({
-      type: 'submit', title: 'Сохранить',
+      type: 'submit',
+      title: 'Сохранить',
+      isDisabled: '',
+      disabledClassName: '',
+    });
+
+    const linkToPassword = new Link({
+      className: '',
+      to: '/settings/password',
+      title: 'Изменить пароль',
+    });
+
+    const logoutButton = new Button(
+      {
+        className: 'button-logout',
+        type: '',
+        title: 'Выйти',
+        isDisabled: '',
+        disabledClassName: '',
+      },
+      {
+        click: (event: Event) => {
+          event.preventDefault();
+          AuthService.logout();
+        },
+      },
+    );
+
+    const formAvatar = new FormAvatar({
+      avatar: props.avatar ? BASE_URL_RESOURCES + props.avatar : pepeAvatar,
     });
 
     super({
-      account,
-      email,
-      login,
-      firstName,
-      secondName,
-      phone,
+      ...props,
+      emailInput,
+      loginInput,
+      firstNameInput,
+      secondNameInput,
+      displayName: props.display_name,
+      phoneInput,
       button,
+      tooltip,
+      linkToPassword,
+      logoutButton,
+      linkToChat,
+      formAvatar,
+      Spinner,
       events: {
-        input: (event: Event) => events.input(event, state),
-        submit: (event: Event) => events.submit(self, event),
+        change: (event: Event) => {
+          event.preventDefault();
+
+          let isValidForm: Boolean = false;
+
+          setTimeout(() => {
+            const children: {[key: string]: any} = Object.values(this.children);
+
+            for (let i = 0; i < children.length; i += 1) {
+              if (children[i].props.error !== undefined) {
+                if (String(children[i].props.value).length > 0 && children[i].props.error.length === 0) {
+                  isValidForm = true;
+                } else {
+                  isValidForm = false;
+                  break;
+                }
+              }
+            }
+
+            if (isValidForm) {
+              button.setProps({ isDisabled: '', disabledClassName: '' });
+            } else {
+              button.setProps({
+                isDisabled: 'disabled',
+                disabledClassName: 'button-primary-disabled',
+              });
+            }
+          }, 100);
+        },
+        submit: (event: Event) => {
+          event.preventDefault();
+
+          const form = event.target as HTMLFormElement;
+
+          if (form.name !== 'profile') {
+            return;
+          }
+
+          const formIsValid = Validation.onSubmitValidation(form);
+
+          const requestData: { [key: string]: string } = {
+            first_name: '',
+            second_name: '',
+            display_name: '',
+            login: '',
+            email: '',
+            password: '',
+            phone: '',
+          };
+
+          Object.values(this.children).forEach((element) => {
+            requestData[element.props.name] = String(element.props.value);
+          });
+
+          if (formIsValid) {
+            ProfileService.editProfile(JSON.stringify(requestData));
+          }
+        },
       },
     });
-    const self = this;
   }
 
   render() {
     return this.compile(template);
   }
 }
+
+function mapStateToProps(state: TProps) {
+  const { user } = state;
+
+  if (user) {
+    return {
+      first_name: user.first_name,
+      second_name: user.second_name,
+      display_name: `${user.first_name} ${user.second_name}`,
+      login: user.login,
+      email: user.email,
+      phone: user.phone,
+      avatar: user.avatar,
+    };
+  }
+
+  return {
+    first_name: null,
+    second_name: null,
+    display_name: null,
+    login: null,
+    email: null,
+    phone: null,
+    avatar: null,
+  };
+}
+
+export default connect(ProfilePage, mapStateToProps);
