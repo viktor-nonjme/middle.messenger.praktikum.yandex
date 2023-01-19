@@ -1,12 +1,15 @@
-FROM node:18-alpine
+FROM node:16-alpine
 
 WORKDIR /var/www/app
 
-COPY . .
+COPY package.json package-lock.json ./
 
 RUN npm install
+
+COPY . .
+
 RUN npm run build
 
 EXPOSE 3000
 
-CMD npm run start
+CMD ["node", "./server.js"]
