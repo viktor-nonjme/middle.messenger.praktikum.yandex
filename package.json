@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "Messenger",
   "scripts": {
-    "dev": "parcel static/index.html --no-cache",
-    "build": "rimraf dist && parcel build static/index.html",
-    "start": "node server.js",
-    "stylelint": "stylelint **/*.scss --fix"
+    "dev": "NODE_ENV=development webpack-dev-server --mode development",
+    "build": "NODE_ENV=production rimraf dist && webpack --mode production",
+    "start": "npm run build && node server.js",
+    "stylelint": "stylelint **/*.scss --fix",
+    "eslint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "test": "./node_modules/.bin/mocha",
+    "lint": "npm run eslint && npm run stylelint"
   },
   "repository": {
     "type": "git",
@@ -20,21 +23,35 @@
   },
   "homepage": "https://github.com/viktor-nonjme/middle.messenger.praktikum.yandex#readme",
   "devDependencies": {
-    "@anikin/parcel-transformer-handlebars": "1.0.9",
-    "@parcel/transformer-sass": "2.7.0",
+    "@types/chai": "4.3.4",
+    "@types/mocha": "10.0.1",
+    "@types/sinon": "10.0.13",
     "@types/uuid": "8.3.4",
-    "chai": "4.3.7",
+    "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "6.7.3",
+    "file-loader": "6.2.0",
+    "html-webpack-plugin": "5.5.0",
+    "husky": "8.0.3",
+    "mini-css-extract-plugin": "2.7.2",
     "mocha": "10.2.0",
-    "parcel": "2.7.0",
     "rimraf": "3.0.2",
     "sass": "1.55.0",
-    "typescript": "4.8.4"
+    "sass-loader": "13.2.0",
+    "ts-loader": "9.4.2",
+    "ts-node": "10.9.1",
+    "typescript": "4.8.4",
+    "webpack": "5.75.0",
+    "webpack-cli": "5.0.1",
+    "webpack-dev-server": "4.11.1"
   },
   "dependencies": {
+    "chai": "4.3.7",
     "express": "4.18.2",
     "handlebars": "4.7.7",
-    "install-peerdeps": "^3.0.3",
-    "nanoid": "4.0.0"
+    "install-peerdeps": "3.0.3",
+    "jsdom": "21.0.0",
+    "nanoid": "3.3.4",
+    "sinon": "15.0.1"
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "5.42.0",
@@ -45,5 +62,20 @@
     "stylelint": "14.14.0",
     "stylelint-config-standard-scss": "6.1.0",
     "stylelint-scss": "4.3.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test",
+      "pre-push": "npm run lint"
+    }
+  },
+  "targets": {
+    "browserModern": {
+      "engines": {
+        "browsers": [
+          "last 1 Chrome version"
+        ]
+      }
+    }
   }
 }

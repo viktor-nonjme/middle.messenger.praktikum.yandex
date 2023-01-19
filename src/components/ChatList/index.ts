@@ -47,7 +47,7 @@ class ChatList extends Block {
 
             const title = chatElement.querySelector('.chat-list-item-title')!.textContent;
 
-            ChatService.startChating(id, title);
+            ChatService.startChating(id, title, true);
           }
         },
       },

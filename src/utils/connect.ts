@@ -2,7 +2,7 @@ import { TProps } from '../types';
 import Block from './Block';
 import store from './Store';
 
-export function connect(Component: typeof Block, mapStateToProps: (state: any) => TProps) {
+export function connect(Component: typeof Block, mapStateToProps: (state: TProps) => TProps) {
   return class extends Component {
     constructor(props = {}) {
       super({ ...props, ...mapStateToProps(store.getState()) });
