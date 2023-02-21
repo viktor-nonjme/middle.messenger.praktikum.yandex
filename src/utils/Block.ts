@@ -15,7 +15,7 @@ export default class Block {
 
   public id = nanoid(6);
 
-  protected _element: HTMLElement | null = null;
+  public element: HTMLElement | null = null;
 
   public readonly props: TProps;
 
@@ -46,8 +46,8 @@ export default class Block {
   }
 
   _getChildren(propsAndChildren?: TProps) {
-    const children: any = {};
-    const props: any = {};
+    const children: TProps = {};
+    const props: TProps = {};
 
     Object.entries(propsAndChildren as TProps).forEach(([key, value]) => {
       if (value instanceof Block) {
@@ -68,7 +68,7 @@ export default class Block {
   }
 
   _createResources() {
-    this._element = this._createDocumentElement('div');
+    this.element = this._createDocumentElement('div');
   }
 
   init() {
@@ -76,15 +76,17 @@ export default class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER, this.props);
   }
 
-  _componentDidMount(props: TProps) {
-    this.componentDidMount(props);
+  _componentDidMount() {
+    this.componentDidMount();
   }
 
   dispatchComponentDidMount() {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
-  componentDidMount(props: TProps) {}
+  componentDidMount() {
+
+  }
 
   _componentDidUpdate(oldProps: TProps, newProps: TProps) {
     const response = this.componentDidUpdate(oldProps, newProps);
@@ -95,7 +97,10 @@ export default class Block {
   }
 
   componentDidUpdate(oldProps: TProps, newProps: TProps) {
-    return true;
+    if (JSON.stringify(oldProps) === JSON.stringify(newProps)) {
+      return true;
+    }
+    return false;
   }
 
   setProps = (nextProps: TProps) => {
@@ -106,16 +111,16 @@ export default class Block {
     Object.assign(this.props, nextProps);
   };
 
-  get element() {
-    return this._element;
+  get el() {
+    return this.element;
   }
 
   _render() {
     const fragment: any = this.render();
     this._removeEvents();
     const newElement = fragment.firstElementChild;
-    this._element!.replaceWith(newElement);
-    this._element = newElement as HTMLElement;
+    this.element!.replaceWith(newElement);
+    this.element = newElement as HTMLElement;
     this._addEvents();
   }
 
@@ -159,13 +164,13 @@ export default class Block {
   _removeEvents() {
     const { events } = this.props as TProps;
 
-    if (!events || !this._element) {
+    if (!events || !this.element) {
       return;
     }
 
     Object.keys(events).forEach((eventName) => {
-      if (this._element) {
-        this._element?.removeEventListener(eventName, events[eventName]);
+      if (this.element) {
+        this.element?.removeEventListener(eventName, events[eventName]);
       }
     });
   }
@@ -178,14 +183,14 @@ export default class Block {
     }
 
     Object.keys(events).forEach((eventName) => {
-      if (this._element) {
-        this._element!.addEventListener(eventName, events[eventName], true);
+      if (this.element) {
+        this.element!.addEventListener(eventName, events[eventName], true);
       }
     });
   }
 
   protected compile(tmpl: string): DocumentFragment {
-    const propsAndStubs: any = { ...this.props };
+    const propsAndStubs: TProps = { ...this.props };
 
     Object.entries(this.children).forEach(([name, component]) => {
       if (Array.isArray(component)) {

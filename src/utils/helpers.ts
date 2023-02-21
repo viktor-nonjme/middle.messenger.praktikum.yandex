@@ -1,4 +1,5 @@
 type Indexed<T = any> = {
+  // eslint-disable-next-line no-unused-vars
   [key in string]: T;
 };
 
@@ -59,7 +60,7 @@ function deepParseJson(jsonString: any): any {
   }
 
   if (typeof jsonString === 'object' && jsonString !== null) {
-    return Object.keys(jsonString).reduce((obj: Record<string, any>, key) => {
+    return Object.keys(jsonString).reduce((obj: Indexed, key: string) => {
       const value = jsonString[key];
       obj[key] = deepParseJson(value);
       return obj;

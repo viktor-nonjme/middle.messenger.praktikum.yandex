@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "target": "es2019",
+    "target": "es2016",
     "declaration": false,
     "module": "commonjs",
     "strictNullChecks": true,
@@ -9,9 +9,12 @@
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
   },
   "typeRoots" : ["node_modules/@types", "typings/app.d.ts"],
   "include": ["src/**/*", "typings/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "files": true
+  },
 }

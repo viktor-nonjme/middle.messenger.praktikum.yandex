@@ -15,10 +15,9 @@ export default class EventBus {
 
   emit(event: string, ...args: any) {
     if (!this.listeners[event]) {
-      // throw new Event(`Нет события: ${event}`);
       return;
     }
-    // console.log(this.listeners, event, this.listeners[event]);
+
     this.listeners[event].forEach((listener: Function) => {
       listener(...args);
     });
@@ -26,7 +25,6 @@ export default class EventBus {
 
   off(event: string, callback: Function) {
     if (!this.listeners[event]) {
-      // throw new Error(`Нет события: ${event}`);
       return;
     }
 

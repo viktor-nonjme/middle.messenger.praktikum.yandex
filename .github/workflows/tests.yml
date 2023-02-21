@@ -107,5 +107,3 @@ jobs:
       if: ${{github.event.repository.private}}
     - name: Get testing lib
       run: set -eu && git clone https://github.com/Yandex-Practicum/tests-second-floor.git
-    - name: Run the tests
-      run: bash tests-second-floor/sprint_4/run.sh

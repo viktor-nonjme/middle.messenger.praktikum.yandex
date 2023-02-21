@@ -2,9 +2,9 @@ import Route from './Route';
 import Store from './Store';
 
 class Router {
-  private routes: Route[] = [];
+  routes: Route[] = [];
 
-  private history = window.history;
+  history = window.history;
 
   private _currentRoute: null | Route | undefined;
 
@@ -64,6 +64,7 @@ class Router {
 
   go(pathname: string) {
     this.history.pushState({}, '', pathname);
+
     this._onRoute(pathname);
   }
 
